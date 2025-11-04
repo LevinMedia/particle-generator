@@ -30,13 +30,13 @@ export default function Home() {
   const [showControls, setShowControls] = useState(false)
 
   return (
-    <main className="w-full h-screen h-dvh flex flex-col lg:flex-row bg-background text-foreground overflow-hidden">
+    <main className="w-full h-screen flex flex-col lg:flex-row bg-background text-foreground overflow-hidden">
       {/* Full-screen particle background */}
       <div className="flex-1 relative w-full h-full overflow-hidden min-h-0">
         <ParticleCanvas config={config} />
 
         {/* Mobile controls */}
-        <div className="lg:hidden absolute bottom-4 left-4 right-4 z-50 flex items-center gap-2 pointer-events-none">
+        <div className="lg:hidden absolute bottom-0 left-0 right-0 z-50 flex items-center gap-2 px-4 pt-4 pointer-events-none" style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}>
           <div className="flex-1 pointer-events-auto">
             <MobilePresetNavigator config={config} onConfigChange={setConfig} />
           </div>
