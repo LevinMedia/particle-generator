@@ -48,7 +48,7 @@ export default function Home() {
 
       {/* Control panel */}
       <aside
-        className={`fixed lg:relative bottom-0 left-0 right-0 lg:bottom-auto w-full lg:w-96 h-screen lg:h-screen bg-background/95 backdrop-blur-sm border-t lg:border-t-0 lg:border-l border-border transition-transform duration-300 z-40 ${
+        className={`fixed lg:relative bottom-0 left-0 right-0 lg:bottom-auto w-full lg:w-96 h-screen lg:h-screen bg-background/95 backdrop-blur-sm border-t lg:border-t-0 lg:border-l border-border transition-transform duration-300 z-40 overflow-hidden ${
           showControls ? "translate-y-0" : "translate-y-full lg:translate-y-0"
         }`}
       >

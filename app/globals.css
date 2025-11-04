@@ -179,6 +179,8 @@
   .scrollable {
     scrollbar-width: thin;
     scrollbar-color: var(--muted) transparent;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
   }
 
   .scrollable::-webkit-scrollbar {
