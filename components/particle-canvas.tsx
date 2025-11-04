@@ -32,6 +32,11 @@ export function ParticleCanvas({ config }: { config: ParticleConfig }) {
         // Reset transform and scale context to match device pixel ratio
         ctx.setTransform(1, 0, 0, 1, 0, 0)
         ctx.scale(dpr, dpr)
+        
+        // Reinitialize grid if engine exists and size changed
+        if (engineRef.current) {
+          engineRef.current.resize()
+        }
       }
     }
     updateCanvasSize()

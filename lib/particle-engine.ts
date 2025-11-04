@@ -55,13 +55,27 @@ export class ParticleEngine {
   private initializeGrid() {
     this.gridParticles = []
     const density = Math.max(3, this.config.gridDensity)
-    const cellWidth = this.canvas.width / density
-    const cellHeight = this.canvas.height / density
+    
+    // Get display dimensions (not internal pixel dimensions)
+    const displayWidth = this.canvas.clientWidth || this.canvas.width
+    const displayHeight = this.canvas.clientHeight || this.canvas.height
+    
+    // Make grid larger to ensure it covers viewport even with rotation/camera movement
+    // Use diagonal of canvas as minimum size to account for 45-degree rotation
+    const diagonal = Math.sqrt(displayWidth * displayWidth + displayHeight * displayHeight)
+    const gridSize = Math.max(displayWidth, displayHeight, diagonal * 2) // 2x to ensure full coverage
+    
+    const cellWidth = gridSize / density
+    const cellHeight = gridSize / density
+    
+    // Center the grid around the canvas center
+    const gridOffsetX = (gridSize - displayWidth) / 2
+    const gridOffsetY = (gridSize - displayHeight) / 2
 
     for (let y = 0; y < density; y++) {
       for (let x = 0; x < density; x++) {
-        const baseX = x * cellWidth + cellWidth / 2
-        const baseY = y * cellHeight + cellHeight / 2
+        const baseX = x * cellWidth + cellWidth / 2 - gridOffsetX
+        const baseY = y * cellHeight + cellHeight / 2 - gridOffsetY
         const baseZ = 0 // Start at Z=0 plane
         
         this.gridParticles.push({
@@ -83,9 +97,12 @@ export class ParticleEngine {
     const rollRad = (this.config.cameraRoll * Math.PI) / 180
     const pitchRad = (this.config.cameraPitch * Math.PI) / 180
 
-    // Center coordinates around canvas center for rotation
-    const cx = this.canvas.width / 2
-    const cy = this.canvas.height / 2
+    // Get display dimensions for center calculation
+    const displayWidth = this.canvas.clientWidth || this.canvas.width
+    const displayHeight = this.canvas.clientHeight || this.canvas.height
+    const cx = displayWidth / 2
+    const cy = displayHeight / 2
+    
     const relX = x - cx
     const relY = y - cy
     const relZ = z
@@ -124,13 +141,16 @@ export class ParticleEngine {
     const dirX = Math.cos(directionRad)
     const dirY = Math.sin(directionRad)
 
+    // Get display dimensions for wave calculation
+    const displayWidth = this.canvas.clientWidth || this.canvas.width
+
     for (const p of this.gridParticles) {
       // Calculate wave offset in the Z direction (amplitude moves particles up/down in 3D space)
       let offsetZ = 0
 
       // Combine multiple sine waves for natural motion
       for (let i = 0; i < this.config.waveCount; i++) {
-        const waveLength = (this.canvas.width / (this.config.waveCount - i)) * 0.5
+        const waveLength = (displayWidth / (this.config.waveCount - i)) * 0.5
         
         // Calculate position along wave direction
         const posAlongWave = (p.baseX * dirX + p.baseY * dirY) / waveLength
@@ -395,6 +415,13 @@ export class ParticleEngine {
         oldParticleColor !== newConfig.particleColor ||
         oldColorMode !== newConfig.colorMode) {
       this.buildGradientLUT()
+    }
+  }
+  
+  // Reinitialize grid when canvas size changes
+  resize() {
+    if (this.useGridMode) {
+      this.initializeGrid()
     }
   }
 }
