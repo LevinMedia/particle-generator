@@ -4,6 +4,7 @@ import { useState } from "react"
 import { ParticleCanvas } from "@/components/particle-canvas"
 import { ControlPanel } from "@/components/control-panel"
 import { MobileToggle } from "@/components/mobile-toggle"
+import { MobilePresetNavigator } from "@/components/mobile-preset-navigator"
 import type { ParticleConfig } from "@/lib/particle-types"
 
 export default function Home() {
@@ -34,8 +35,11 @@ export default function Home() {
       <div className="flex-1 relative w-full h-full overflow-hidden">
         <ParticleCanvas config={config} />
 
-        {/* Mobile control toggle */}
-        <div className="lg:hidden absolute bottom-4 right-4 z-50">
+        {/* Mobile controls */}
+        <div className="lg:hidden absolute bottom-4 left-4 right-4 z-50 flex items-center gap-2">
+          <div className="flex-1">
+            <MobilePresetNavigator config={config} onConfigChange={setConfig} />
+          </div>
           <MobileToggle isOpen={showControls} onClick={() => setShowControls(!showControls)} />
         </div>
       </div>
