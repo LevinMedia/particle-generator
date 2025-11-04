@@ -34,15 +34,15 @@ export default function Home() {
       {/* Full-screen particle background */}
       <div className="flex-1 relative w-full h-full overflow-hidden min-h-0">
         <ParticleCanvas config={config} />
+      </div>
 
-        {/* Mobile controls */}
-        <div className="lg:hidden absolute bottom-0 left-0 right-0 z-50 flex items-center gap-2 px-4 pt-4 pointer-events-none" style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}>
-          <div className="flex-1 pointer-events-auto">
-            <MobilePresetNavigator config={config} onConfigChange={setConfig} />
-          </div>
-          <div className="pointer-events-auto">
-            <MobileToggle isOpen={showControls} onClick={() => setShowControls(!showControls)} />
-          </div>
+      {/* Mobile controls - fixed to viewport */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center gap-2 px-4 pt-4 pointer-events-none" style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}>
+        <div className="flex-1 pointer-events-auto">
+          <MobilePresetNavigator config={config} onConfigChange={setConfig} />
+        </div>
+        <div className="pointer-events-auto">
+          <MobileToggle isOpen={showControls} onClick={() => setShowControls(!showControls)} />
         </div>
       </div>
 
