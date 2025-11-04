@@ -1,5 +1,7 @@
 # WebGL Background Generator
 
+**[🌐 Live Demo](https://v0-particle-simulator-ui.vercel.app)** | **[📦 GitHub](https://github.com/LevinMedia/v0-particle-simulator-ui)**
+
 An interactive 3D particle wave generator with real-time rendering and camera controls. Create stunning animated backgrounds with flowing wave patterns and export them for use in your projects.
 
 ## Features
