@@ -71,8 +71,13 @@ ctx.fillStyle = '#cccccc';
 ctx.font = '32px system-ui, -apple-system, sans-serif';
 ctx.fillText('Interactive 3D Particle Wave Generator', width / 2, 340);
 
-// Save the image
-const buffer = canvas.toBuffer('image/png');
+// Save the image with compression
+const buffer = canvas.toBuffer('image/png', { compressionLevel: 9 });
 const outputPath = path.join(__dirname, '../public/og-image.png');
 fs.writeFileSync(outputPath, buffer);
 console.log('OG image PNG created at:', outputPath);
+
+// Check file size
+const stats = fs.statSync(outputPath);
+const fileSizeKB = (stats.size / 1024).toFixed(2);
+console.log(`File size: ${fileSizeKB} KB`);
