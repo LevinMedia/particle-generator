@@ -415,11 +415,13 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
         {onMobileClose && (
           <button
             onClick={onMobileClose}
-            className="lg:hidden p-2 hover:bg-muted/30 active:bg-muted/50 rounded transition-all duration-150 flex-shrink-0 button-interactive focus-ring"
+            className="lg:hidden px-4 py-3 rounded-lg bg-accent/80 hover:bg-accent/90 active:bg-accent text-accent-foreground border border-accent/50 transition-all duration-200 shadow-lg button-interactive focus-ring flex items-center justify-center"
             aria-label="Close panel"
-            style={{ minHeight: "44px", minWidth: "44px" }}
+            style={{
+              minHeight: "44px",
+            }}
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
         )}
       </div>
