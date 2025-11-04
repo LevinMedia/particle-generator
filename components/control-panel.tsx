@@ -543,7 +543,7 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
     <div className="h-full flex flex-col">
       <div className="p-4 border-b border-border sticky top-0 bg-background/95 backdrop-blur-sm flex items-center justify-between z-10">
         <div className="min-w-0">
-          <h1 className="font-mono text-lg text-foreground truncate">particle.config</h1>
+          <h1 className="font-mono text-lg text-foreground truncate">particle.generator</h1>
           <p className="text-xs text-muted-foreground mt-1">WebGL Background Generator</p>
         </div>
         {onMobileClose && (
