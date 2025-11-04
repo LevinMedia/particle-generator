@@ -27,6 +27,25 @@ export function ParticleBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<ParticleEngine | null>(null);
 
+  const config: ParticleConfig = {
+    size: ${config.size},
+    gridDensity: ${config.gridDensity},
+    waveAmplitude: ${config.waveAmplitude},
+    waveFrequency: ${config.waveFrequency},
+    waveSpeed: ${config.waveSpeed},
+    waveCount: ${config.waveCount},
+    waveDirection: ${config.waveDirection},
+    cameraRoll: ${config.cameraRoll},
+    cameraPitch: ${config.cameraPitch},
+    cameraAltitude: ${config.cameraAltitude},
+    colorMode: "${config.colorMode}",
+    particleColor: "${config.particleColor}",
+    peakColor: "${config.peakColor}",
+    troughColor: "${config.troughColor}",
+    backgroundColor: "${config.backgroundColor}",
+    backgroundGradient: "${config.backgroundGradient}",
+  };
+
   useEffect(() => {
     if (!canvasRef.current) return;
 
@@ -45,57 +64,56 @@ export function ParticleBackground() {
       engineRef.current = new ParticleEngine(ctx, canvas);
     }
 
-    engineRef.current.config = {
-      count: ${config.count},
-      speed: ${config.speed},
-      size: ${config.size},
-      life: ${config.life},
-      gravity: ${config.gravity},
-      friction: ${config.friction},
-      spread: ${config.spread},
-      colorHue: ${config.colorHue},
-      colorSaturation: ${config.colorSaturation},
-      colorLightness: ${config.colorLightness},
-      trailLength: ${config.trailLength},
-      explosiveForce: ${config.explosiveForce},
-      emissionRate: ${config.emissionRate},
-    };
+    engineRef.current.updateConfig(config);
+    const isGridMode = config.waveAmplitude > 0 && config.gridDensity > 0;
+    engineRef.current.setGridMode(isGridMode);
 
+    let animationFrameId: number;
     const animate = () => {
       engineRef.current?.update();
       engineRef.current?.draw();
-      requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
     };
     animate();
 
     return () => {
       window.removeEventListener('resize', updateCanvasSize);
+      cancelAnimationFrame(animationFrameId);
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className="w-full h-full absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"
+      className="w-full h-full absolute inset-0"
+      style={{
+        background: config.backgroundColor,
+        pointerEvents: "none",
+        transform: "scale(1.5)",
+        transformOrigin: "center center",
+      }}
     />
   );
 }`
 
   const configCode = `// particle.config.ts - Current configuration
 export const particleConfig = {
-  count: ${config.count},
-  speed: ${config.speed},
   size: ${config.size},
-  life: ${config.life},
-  gravity: ${config.gravity},
-  friction: ${config.friction},
-  spread: ${config.spread},
-  colorHue: ${config.colorHue},
-  colorSaturation: ${config.colorSaturation},
-  colorLightness: ${config.colorLightness},
-  trailLength: ${config.trailLength},
-  explosiveForce: ${config.explosiveForce},
-  emissionRate: ${config.emissionRate},
+  gridDensity: ${config.gridDensity},
+  waveAmplitude: ${config.waveAmplitude},
+  waveFrequency: ${config.waveFrequency},
+  waveSpeed: ${config.waveSpeed},
+  waveCount: ${config.waveCount},
+  waveDirection: ${config.waveDirection},
+  cameraRoll: ${config.cameraRoll},
+  cameraPitch: ${config.cameraPitch},
+  cameraAltitude: ${config.cameraAltitude},
+  colorMode: "${config.colorMode}",
+  particleColor: "${config.particleColor}",
+  peakColor: "${config.peakColor}",
+  troughColor: "${config.troughColor}",
+  backgroundColor: "${config.backgroundColor}",
+  backgroundGradient: "${config.backgroundGradient}",
 } as const;`
 
   const usageCode = `// Usage in your Next.js app

@@ -2,8 +2,9 @@
 
 import type React from "react"
 
-import { useState } from "react"
-import { ChevronDown, X } from "lucide-react"
+import { useState, useRef, useEffect } from "react"
+import { ChevronDown, X, HelpCircle } from "lucide-react"
+import * as SliderPrimitive from "@radix-ui/react-slider"
 import type { ParticleConfig } from "@/lib/particle-types"
 import { ExportSection } from "./export-section"
 
@@ -14,7 +15,21 @@ interface ControlPanelProps {
 }
 
 export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlPanelProps) {
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(["wave"]))
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(["particles", "wave", "export"]))
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const scrollPositionRef = useRef(0)
+
+  // Preserve scroll position across re-renders
+  useEffect(() => {
+    const container = scrollContainerRef.current
+    if (container) {
+      container.scrollTop = scrollPositionRef.current
+    }
+  })
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    scrollPositionRef.current = e.currentTarget.scrollTop
+  }
 
   const toggleSection = (section: string) => {
     const newSections = new Set(expandedSections)
@@ -29,6 +44,149 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
   const updateConfig = (updates: Partial<ParticleConfig>) => {
     onConfigChange({ ...config, ...updates })
   }
+
+  const loadPreset = (preset: ParticleConfig) => {
+    onConfigChange(preset)
+  }
+
+  const presets: Array<{ name: string; config: ParticleConfig }> = [
+    {
+      name: "Default",
+      config: {
+        size: 1,
+        gridDensity: 100,
+        waveAmplitude: 0.3,
+        waveFrequency: 0.05,
+        waveSpeed: 1,
+        waveCount: 1,
+        waveDirection: 180,
+        cameraRoll: 0,
+        cameraPitch: 0,
+        cameraAltitude: 0,
+        colorMode: "solid",
+        particleColor: "#ff00ff",
+        peakColor: "#00ffff",
+        troughColor: "#ff00ff",
+        backgroundColor: "#0a0a0a",
+        backgroundGradient: "#1a1a2e",
+      },
+    },
+    {
+      name: "Party Wave",
+      config: {
+        size: 1,
+        gridDensity: 143,
+        waveAmplitude: 1,
+        waveFrequency: 0.5,
+        waveSpeed: 0.1,
+        waveCount: 3,
+        waveDirection: 220,
+        cameraRoll: -8,
+        cameraPitch: -72,
+        cameraAltitude: 1000,
+        colorMode: "gradient",
+        particleColor: "#ff00ff",
+        peakColor: "#00ffff",
+        troughColor: "#ff00ff",
+        backgroundColor: "#0a0a0a",
+        backgroundGradient: "#1a1a2e",
+      },
+    },
+    {
+      name: "Ocean Depths",
+      config: {
+        size: 1.5,
+        gridDensity: 200,
+        waveAmplitude: 0.5,
+        waveFrequency: 0.08,
+        waveSpeed: 0.5,
+        waveCount: 2,
+        waveDirection: 90,
+        cameraRoll: 0,
+        cameraPitch: -45,
+        cameraAltitude: 200,
+        colorMode: "gradient",
+        particleColor: "#0099ff",
+        peakColor: "#00ffff",
+        troughColor: "#000033",
+        backgroundColor: "#000814",
+        backgroundGradient: "#001d3d",
+      },
+    },
+    {
+      name: "Neon Grid",
+      config: {
+        size: 2,
+        gridDensity: 80,
+        waveAmplitude: 0.8,
+        waveFrequency: 0.15,
+        waveSpeed: 1.5,
+        waveCount: 1,
+        waveDirection: 45,
+        cameraRoll: 0,
+        cameraPitch: -60,
+        cameraAltitude: 300,
+        colorMode: "gradient",
+        particleColor: "#ff00ff",
+        peakColor: "#ff006e",
+        troughColor: "#00ffff",
+        backgroundColor: "#000000",
+        backgroundGradient: "#1a0033",
+      },
+    },
+    {
+      name: "Ripple",
+      config: {
+        size: 1,
+        gridDensity: 150,
+        waveAmplitude: 0.2,
+        waveFrequency: 0.03,
+        waveSpeed: 2,
+        waveCount: 5,
+        waveDirection: 0,
+        cameraRoll: 0,
+        cameraPitch: -80,
+        cameraAltitude: 500,
+        colorMode: "gradient",
+        particleColor: "#ffffff",
+        peakColor: "#ffffff",
+        troughColor: "#666666",
+        backgroundColor: "#0a0a0a",
+        backgroundGradient: "#1a1a1a",
+      },
+    },
+    {
+      name: "Aurora",
+      config: {
+        size: 1.5,
+        gridDensity: 120,
+        waveAmplitude: 0.7,
+        waveFrequency: 0.1,
+        waveSpeed: 0.3,
+        waveCount: 4,
+        waveDirection: 135,
+        cameraRoll: 15,
+        cameraPitch: -30,
+        cameraAltitude: -100,
+        colorMode: "gradient",
+        particleColor: "#00ff00",
+        peakColor: "#00ff88",
+        troughColor: "#8800ff",
+        backgroundColor: "#000a1a",
+        backgroundGradient: "#001a33",
+      },
+    },
+  ]
+
+  const Tooltip = ({ text }: { text: string }) => (
+    <div className="group relative inline-flex">
+      <HelpCircle className="w-3.5 h-3.5 text-muted-foreground/50 hover:text-muted-foreground cursor-help transition-colors" />
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-2 bg-popover text-popover-foreground text-xs rounded-md shadow-lg border border-border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-normal w-48 z-50 pointer-events-none">
+        {text}
+        <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-popover" />
+      </div>
+    </div>
+  )
 
   const ControlSection = ({
     title,
@@ -45,7 +203,7 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
       <div className="border-b border-border">
         <button
           onClick={() => toggleSection(id)}
-          className="w-full px-4 py-3 flex items-center justify-between hover:bg-muted/30 active:bg-muted/50 transition-all duration-150 text-left font-mono text-sm focus-ring button-interactive"
+          className="w-full px-4 py-3 flex items-center justify-between bg-muted/30 hover:bg-muted/50 active:bg-muted/70 transition-all duration-150 text-left font-mono text-sm focus-ring button-interactive"
           aria-expanded={isExpanded}
           style={{ minHeight: "48px" }}
         >
@@ -64,6 +222,7 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
     max,
     step,
     onChange,
+    tooltip,
   }: {
     label: string
     value: number
@@ -71,60 +230,285 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
     max: number
     step: number
     onChange: (value: number) => void
-  }) => (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between gap-2">
-        <label className="text-xs font-mono text-muted-foreground uppercase tracking-wide">{label}</label>
-        <span className="font-mono text-xs text-accent bg-muted/50 px-2 py-1 rounded whitespace-nowrap">
-          {(value ?? 0).toFixed(step < 1 ? 2 : 0)}
-        </span>
+    tooltip?: string
+  }) => {
+    const [localValue, setLocalValue] = useState(value)
+    const [isDragging, setIsDragging] = useState(false)
+
+    // Sync local value with prop when not dragging
+    useEffect(() => {
+      if (!isDragging) {
+        setLocalValue(value)
+      }
+    }, [value, isDragging])
+
+    const displayValue = isDragging ? localValue : value
+
+    return (
+      <div className="space-y-1.5">
+        <div className="flex items-center gap-1.5">
+          <label className="text-xs font-mono text-muted-foreground uppercase tracking-wide">{label}</label>
+          {tooltip && <Tooltip text={tooltip} />}
+        </div>
+        <div className="relative">
+          <div className="flex justify-end mb-1">
+            <span className="font-mono text-xs text-accent bg-muted/50 px-2 py-1 rounded whitespace-nowrap">
+              {(displayValue ?? 0).toFixed(step < 1 ? 2 : 0)}
+            </span>
+          </div>
+          <SliderPrimitive.Root
+            className="relative flex items-center w-full h-11"
+            style={{ 
+              userSelect: 'none', 
+              touchAction: 'none',
+              WebkitUserSelect: 'none',
+              cursor: 'pointer'
+            }}
+            value={[displayValue]}
+            onValueChange={(values) => {
+              setLocalValue(values[0])
+            }}
+            onPointerDown={() => {
+              setIsDragging(true)
+            }}
+            onPointerUp={() => {
+              setIsDragging(false)
+              onChange(localValue)
+            }}
+            onLostPointerCapture={() => {
+              setIsDragging(false)
+              onChange(localValue)
+            }}
+            min={min}
+            max={max}
+            step={step}
+          >
+            <SliderPrimitive.Track className="bg-muted relative grow rounded-full h-1.5 cursor-pointer">
+              <SliderPrimitive.Range className="absolute bg-accent/30 rounded-full h-full" />
+            </SliderPrimitive.Track>
+            <SliderPrimitive.Thumb 
+              className="block w-5 h-5 bg-accent rounded-full shadow-lg hover:bg-accent/80 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 active:scale-125 transition-all"
+            />
+          </SliderPrimitive.Root>
+        </div>
       </div>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value ?? 0}
-        onChange={(e) => onChange(Number.parseFloat(e.target.value))}
-        className="w-full h-1.5 bg-muted rounded-full appearance-none cursor-pointer slider focus-ring"
-        style={{ minHeight: "32px" }}
-      />
-    </div>
-  )
+    )
+  }
+
+  const DirectionControl = ({
+    label,
+    value,
+    onChange,
+    tooltip,
+  }: {
+    label: string
+    value: number
+    onChange: (value: number) => void
+    tooltip?: string
+  }) => {
+    const [localValue, setLocalValue] = useState(value)
+    const [isDragging, setIsDragging] = useState(false)
+    const dialRef = useRef<HTMLDivElement>(null)
+
+    // Sync local value with prop when not dragging
+    useEffect(() => {
+      if (!isDragging) {
+        setLocalValue(value)
+      }
+    }, [value, isDragging])
+
+    const calculateAngle = (clientX: number, clientY: number) => {
+      if (!dialRef.current) return value
+
+      const rect = dialRef.current.getBoundingClientRect()
+      const centerX = rect.left + rect.width / 2
+      const centerY = rect.top + rect.height / 2
+      
+      const deltaX = clientX - centerX
+      const deltaY = clientY - centerY
+      
+      // Calculate angle in degrees (0 = right, 90 = down, 180 = left, 270 = up)
+      let angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI)
+      
+      // Normalize to 0-360
+      if (angle < 0) angle += 360
+      
+      return Math.round(angle)
+    }
+
+    useEffect(() => {
+      const handleMouseMove = (e: MouseEvent) => {
+        if (isDragging) {
+          setLocalValue(calculateAngle(e.clientX, e.clientY))
+        }
+      }
+
+      const handleTouchMove = (e: TouchEvent) => {
+        if (isDragging) {
+          setLocalValue(calculateAngle(e.touches[0].clientX, e.touches[0].clientY))
+        }
+      }
+
+      const handleEnd = () => {
+        if (isDragging) {
+          setIsDragging(false)
+          onChange(localValue)
+        }
+      }
+
+      if (isDragging) {
+        document.addEventListener("mousemove", handleMouseMove)
+        document.addEventListener("mouseup", handleEnd)
+        document.addEventListener("touchmove", handleTouchMove)
+        document.addEventListener("touchend", handleEnd)
+      }
+
+      return () => {
+        document.removeEventListener("mousemove", handleMouseMove)
+        document.removeEventListener("mouseup", handleEnd)
+        document.removeEventListener("touchmove", handleTouchMove)
+        document.removeEventListener("touchend", handleEnd)
+      }
+    }, [isDragging, localValue])
+
+    const handleStart = (clientX: number, clientY: number) => {
+      setIsDragging(true)
+      setLocalValue(calculateAngle(clientX, clientY))
+    }
+
+    const displayValue = isDragging ? localValue : value
+
+    return (
+      <div className="space-y-2">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5">
+            <label className="text-xs font-mono text-muted-foreground uppercase tracking-wide">{label}</label>
+            {tooltip && <Tooltip text={tooltip} />}
+          </div>
+          <span className="font-mono text-xs text-accent bg-muted/50 px-2 py-1 rounded whitespace-nowrap">
+            {displayValue}°
+          </span>
+        </div>
+        <div className="flex justify-center py-2">
+          <div
+            ref={dialRef}
+            onMouseDown={(e) => handleStart(e.clientX, e.clientY)}
+            onTouchStart={(e) => handleStart(e.touches[0].clientX, e.touches[0].clientY)}
+            className="relative w-24 h-24 rounded-full border-2 border-muted bg-muted/20 cursor-pointer hover:border-accent transition-colors"
+            style={{ touchAction: 'none', userSelect: 'none' }}
+          >
+            {/* Center dot */}
+            <div className="absolute top-1/2 left-1/2 w-2 h-2 bg-accent rounded-full transform -translate-x-1/2 -translate-y-1/2 z-10" />
+            
+            {/* Line indicator - rotates around center */}
+            <div
+              className="absolute top-1/2 left-1/2"
+              style={{
+                transform: `translate(-50%, -50%) rotate(${displayValue}deg)`,
+              }}
+            >
+              {/* Line extending from center to edge */}
+              <div 
+                className="absolute left-0 top-0 h-0.5 bg-accent origin-left"
+                style={{ width: '42px', transform: 'translateY(-50%)' }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   const ColorPicker = ({
     label,
     value,
     onChange,
+    tooltip,
   }: {
     label: string
     value: string
     onChange: (value: string) => void
-  }) => (
-    <div className="space-y-2">
-      <label className="text-xs font-mono text-muted-foreground uppercase tracking-wide">{label}</label>
-      <div className="flex gap-2 items-center">
-        <input
-          type="color"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="w-12 h-8 rounded border border-border cursor-pointer"
-        />
-        <input
-          type="text"
-          value={value.toUpperCase()}
-          onChange={(e) => {
-            const val = e.target.value
-            if (val.match(/^#[0-9A-F]{6}$/i)) {
-              onChange(val.toLowerCase())
-            }
-          }}
-          className="font-mono text-xs bg-muted/30 px-2 py-1 rounded border border-border flex-1 focus-ring"
-          placeholder="#000000"
-        />
+    tooltip?: string
+  }) => {
+    const [localValue, setLocalValue] = useState(value)
+    const [isSelecting, setIsSelecting] = useState(false)
+    const colorInputRef = useRef<HTMLInputElement>(null)
+    const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+    // Sync local value with prop when not selecting
+    useEffect(() => {
+      if (!isSelecting) {
+        setLocalValue(value)
+      }
+    }, [value, isSelecting])
+
+    const handleColorClick = () => {
+      colorInputRef.current?.click()
+    }
+
+    const handleColorChange = (newColor: string) => {
+      setLocalValue(newColor)
+      
+      // Clear any pending update
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current)
+      }
+      
+      // Set a new timeout to update after user stops dragging
+      updateTimeoutRef.current = setTimeout(() => {
+        onChange(newColor)
+      }, 300)
+    }
+
+    const displayValue = isSelecting ? localValue : value
+
+    return (
+      <div className="space-y-2">
+        <div className="flex items-center gap-1.5">
+          <label className="text-xs font-mono text-muted-foreground uppercase tracking-wide">{label}</label>
+          {tooltip && <Tooltip text={tooltip} />}
+        </div>
+        <div className="flex gap-2 items-center">
+          <button
+            type="button"
+            onClick={handleColorClick}
+            className="w-12 h-8 rounded border border-border cursor-pointer hover:border-accent transition-colors"
+            style={{ backgroundColor: displayValue }}
+          />
+          <input
+            ref={colorInputRef}
+            type="color"
+            value={displayValue}
+            onClick={(e) => {
+              e.stopPropagation()
+              setIsSelecting(true)
+            }}
+            onInput={(e) => {
+              setIsSelecting(true)
+              handleColorChange((e.target as HTMLInputElement).value)
+            }}
+            onChange={(e) => {
+              setIsSelecting(true)
+              handleColorChange(e.target.value)
+            }}
+            className="hidden"
+          />
+          <input
+            type="text"
+            value={displayValue.toUpperCase()}
+            onChange={(e) => {
+              const val = e.target.value
+              if (val.match(/^#[0-9A-F]{6}$/i)) {
+                onChange(val.toLowerCase())
+              }
+            }}
+            className="font-mono text-xs bg-muted/30 px-2 py-1 rounded border border-border flex-1 focus-ring"
+            placeholder="#000000"
+          />
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 
   return (
     <div className="h-full flex flex-col">
@@ -145,33 +529,129 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto scrollable">
-        <ControlSection title="00. COLORS" id="colors">
+      <div ref={scrollContainerRef} onScroll={handleScroll} className="flex-1 overflow-y-auto scrollable">
+        <div className="p-4 border-b border-border">
+          <h2 className="text-xs font-mono uppercase text-muted-foreground mb-3">00. PRESETS</h2>
+          <div className="grid grid-cols-2 gap-2">
+            {presets.map((preset) => (
+              <button
+                key={preset.name}
+                onClick={() => loadPreset(preset.config)}
+                className="px-3 py-2 text-xs font-mono bg-muted/20 hover:bg-muted/40 active:bg-muted/60 border border-border rounded transition-all duration-150 text-left text-foreground button-interactive focus-ring"
+                style={{ minHeight: "40px" }}
+              >
+                {preset.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <ControlSection title="01. PARTICLES" id="particles">
+          <Slider
+            label="Particle Size"
+            value={config.size}
+            min={1}
+            max={10}
+            step={0.5}
+            onChange={(v) => updateConfig({ size: v })}
+            tooltip="Controls how large each particle appears"
+          />
+          
+          <div className="space-y-2">
+            <div className="flex items-center gap-1.5">
+              <label className="text-xs font-mono text-muted-foreground uppercase tracking-wide">Particle Color Mode</label>
+              <Tooltip text="Choose between solid color or gradient map for particles" />
+            </div>
+            <select
+              value={config.colorMode || "solid"}
+              onChange={(e) => updateConfig({ colorMode: e.target.value as "solid" | "gradient" })}
+              className="w-full px-3 py-2 bg-muted/30 border border-border rounded text-sm font-mono text-foreground cursor-pointer hover:bg-muted/50 focus-ring"
+            >
+              <option value="solid">Solid</option>
+              <option value="gradient">Gradient Map</option>
+            </select>
+          </div>
+
+          {config.colorMode === "gradient" ? (
+            <>
+              <ColorPicker
+                label="Peak Color"
+                value={config.peakColor}
+                onChange={(v) => updateConfig({ peakColor: v })}
+                tooltip="Color when particles are at the highest point in the wave"
+              />
+              <ColorPicker
+                label="Trough Color"
+                value={config.troughColor}
+                onChange={(v) => updateConfig({ troughColor: v })}
+                tooltip="Color when particles are at the lowest point in the wave"
+              />
+            </>
+          ) : (
+            <ColorPicker
+              label="Particle Color"
+              value={config.particleColor}
+              onChange={(v) => updateConfig({ particleColor: v })}
+              tooltip="The color of the particles in the grid"
+            />
+          )}
+          
           <ColorPicker
             label="Background Color"
             value={config.backgroundColor}
             onChange={(v) => updateConfig({ backgroundColor: v })}
+            tooltip="The solid color for the background"
           />
           <ColorPicker
             label="Background Gradient"
             value={config.backgroundGradient}
             onChange={(v) => updateConfig({ backgroundGradient: v })}
-          />
-          <ColorPicker
-            label="Particle Color"
-            value={config.particleColor}
-            onChange={(v) => updateConfig({ particleColor: v })}
+            tooltip="Creates a gradient from background color to this color"
           />
         </ControlSection>
 
-        <ControlSection title="01. WAVE" id="wave">
+        <ControlSection title="02. WAVE" id="wave">
+          <DirectionControl
+            label="Wave Direction"
+            value={config.waveDirection}
+            onChange={(v) => updateConfig({ waveDirection: v })}
+            tooltip="Direction the wave travels through 3D space. 0° = right, 90° = down, 180° = left, 270° = up."
+          />
+          <Slider
+            label="Camera Roll"
+            value={config.cameraRoll}
+            min={-180}
+            max={180}
+            step={1}
+            onChange={(v) => updateConfig({ cameraRoll: v })}
+            tooltip="Rotate the camera around the Z-axis (screen). Creates a rolling effect."
+          />
+          <Slider
+            label="Camera Pitch"
+            value={config.cameraPitch}
+            min={-90}
+            max={90}
+            step={1}
+            onChange={(v) => updateConfig({ cameraPitch: v })}
+            tooltip="Tilt the camera up/down (pitch). View the wave plane from different angles."
+          />
+          <Slider
+            label="Camera Altitude"
+            value={config.cameraAltitude}
+            min={-1000}
+            max={1000}
+            step={10}
+            onChange={(v) => updateConfig({ cameraAltitude: v })}
+            tooltip="Vertical camera position. Negative moves camera down (plane moves up in frame), positive moves camera up (plane moves down)."
+          />
           <Slider
             label="Grid Density"
             value={config.gridDensity}
             min={3}
-            max={1000}
+            max={500}
             step={10}
             onChange={(v) => updateConfig({ gridDensity: v })}
+            tooltip="How many particles to display. Higher = more particles, denser grid."
           />
           <Slider
             label="Wave Amplitude"
@@ -180,6 +660,7 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
             max={1}
             step={0.05}
             onChange={(v) => updateConfig({ waveAmplitude: v })}
+            tooltip="How far particles move during the wave. Higher = larger wave motion."
           />
           <Slider
             label="Wave Frequency"
@@ -188,6 +669,7 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
             max={0.5}
             step={0.01}
             onChange={(v) => updateConfig({ waveFrequency: v })}
+            tooltip="How many wave peaks appear. Higher = more waves across the screen."
           />
           <Slider
             label="Wave Speed"
@@ -196,6 +678,7 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
             max={5}
             step={0.1}
             onChange={(v) => updateConfig({ waveSpeed: v })}
+            tooltip="How fast the waves move. Higher = faster animation."
           />
           <Slider
             label="Wave Count"
@@ -204,21 +687,13 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
             max={5}
             step={1}
             onChange={(v) => updateConfig({ waveCount: v })}
+            tooltip="Number of overlapping wave patterns. Higher = more complex motion."
           />
-          <label className="flex items-center gap-2 px-2 py-2 hover:bg-muted/20 rounded cursor-pointer">
-            <input
-              type="checkbox"
-              checked={config.particleGlow}
-              onChange={(e) => updateConfig({ particleGlow: e.target.checked })}
-              className="w-4 h-4 rounded cursor-pointer"
-            />
-            <span className="text-xs font-mono text-muted-foreground">Particle Glow</span>
-          </label>
         </ControlSection>
 
-        <div className="p-4 border-t border-border">
+        <ControlSection title="03. EXPORT" id="export">
           <ExportSection config={config} />
-        </div>
+        </ControlSection>
       </div>
     </div>
   )

@@ -8,29 +8,22 @@ import type { ParticleConfig } from "@/lib/particle-types"
 
 export default function Home() {
   const [config, setConfig] = useState<ParticleConfig>({
-    count: 150,
-    speed: 1,
-    size: 2,
-    life: 100,
-    gravity: 0.1,
-    friction: 0.98,
-    spread: 2,
-    colorHue: 0,
-    colorSaturation: 100,
-    colorLightness: 50,
-    trailLength: 15,
-    explosiveForce: 5,
-    emissionRate: 0.3,
-    gridDensity: 150, // increased default gridDensity from 500 to 150 for densely packed particles
+    size: 1,
+    gridDensity: 100,
     waveAmplitude: 0.3,
     waveFrequency: 0.05,
     waveSpeed: 1,
     waveCount: 1,
+    waveDirection: 180,
+    cameraRoll: 0,
+    cameraPitch: 0,
+    cameraAltitude: 0,
+    colorMode: "solid",
     particleColor: "#ff00ff",
+    peakColor: "#00ffff",
+    troughColor: "#ff00ff",
     backgroundColor: "#0a0a0a",
     backgroundGradient: "#1a1a2e",
-    cameraAngle: 0,
-    particleGlow: false,
   })
 
   const [showControls, setShowControls] = useState(false)

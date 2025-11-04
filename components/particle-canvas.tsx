@@ -9,6 +9,7 @@ export function ParticleCanvas({ config }: { config: ParticleConfig }) {
   const engineRef = useRef<ParticleEngine | null>(null)
   const animationIdRef = useRef<number | null>(null)
 
+  // Initialize canvas and animation loop ONCE
   useEffect(() => {
     if (!canvasRef.current) return
 
@@ -34,10 +35,6 @@ export function ParticleCanvas({ config }: { config: ParticleConfig }) {
       engineRef.current = new ParticleEngine(ctx, canvas)
     }
 
-    engineRef.current.config = config
-    const isGridMode = config.waveAmplitude > 0 && config.gridDensity > 0
-    engineRef.current.setGridMode(isGridMode)
-
     const animate = () => {
       engineRef.current?.update()
       engineRef.current?.draw()
@@ -51,6 +48,15 @@ export function ParticleCanvas({ config }: { config: ParticleConfig }) {
       }
       resizeObserver.disconnect()
     }
+  }, []) // Only run once on mount
+
+  // Update config separately without restarting animation
+  useEffect(() => {
+    if (engineRef.current) {
+      engineRef.current.updateConfig(config)
+      const isGridMode = config.waveAmplitude > 0 && config.gridDensity > 0
+      engineRef.current.setGridMode(isGridMode)
+    }
   }, [config])
 
   return (
@@ -59,6 +65,9 @@ export function ParticleCanvas({ config }: { config: ParticleConfig }) {
       className="w-full h-full absolute inset-0"
       style={{
         background: config.backgroundColor,
+        pointerEvents: "none",
+        transform: "scale(1.5)",
+        transformOrigin: "center center",
       }}
     />
   )
