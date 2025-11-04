@@ -30,17 +30,19 @@ export default function Home() {
   const [showControls, setShowControls] = useState(false)
 
   return (
-    <main className="w-full h-screen flex flex-col lg:flex-row bg-background text-foreground overflow-hidden">
+    <main className="w-full h-screen h-dvh flex flex-col lg:flex-row bg-background text-foreground overflow-hidden">
       {/* Full-screen particle background */}
-      <div className="flex-1 relative w-full h-full overflow-hidden">
+      <div className="flex-1 relative w-full h-full overflow-hidden min-h-0">
         <ParticleCanvas config={config} />
 
         {/* Mobile controls */}
-        <div className="lg:hidden absolute bottom-4 left-4 right-4 z-50 flex items-center gap-2">
-          <div className="flex-1">
+        <div className="lg:hidden absolute bottom-4 left-4 right-4 z-50 flex items-center gap-2 pointer-events-none">
+          <div className="flex-1 pointer-events-auto">
             <MobilePresetNavigator config={config} onConfigChange={setConfig} />
           </div>
-          <MobileToggle isOpen={showControls} onClick={() => setShowControls(!showControls)} />
+          <div className="pointer-events-auto">
+            <MobileToggle isOpen={showControls} onClick={() => setShowControls(!showControls)} />
+          </div>
         </div>
       </div>
 

@@ -122,6 +122,19 @@
   }
   body {
     @apply bg-background text-foreground;
+    height: 100vh;
+    height: 100dvh; /* Use dynamic viewport height on mobile */
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+  }
+  
+  html {
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
   }
 }
 
