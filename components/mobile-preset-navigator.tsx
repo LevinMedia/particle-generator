@@ -55,7 +55,7 @@ export function MobilePresetNavigator({ config, onConfigChange }: MobilePresetNa
   }
 
   return (
-    <div className="flex items-center gap-2 p-3 rounded-lg bg-accent/80 hover:bg-accent/90 active:bg-accent border border-accent/50 shadow-lg" style={{ minHeight: "44px" }}>
+    <div className="flex items-center gap-2 px-4 py-3 rounded-lg bg-accent/80 hover:bg-accent/90 active:bg-accent border border-accent/50 shadow-lg" style={{ minHeight: "44px" }}>
       <button
         onClick={goToPrevious}
         className="p-2 hover:bg-accent/30 active:bg-accent/40 text-accent-foreground transition-all duration-200 rounded button-interactive focus-ring flex-shrink-0"
