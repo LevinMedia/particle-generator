@@ -164,6 +164,13 @@
     }
   }
   
+  /* Prevent canvas squishing on mobile */
+  canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+  }
+  
   .slider {
     @apply accent-accent transition-all duration-200;
     pointer-events: auto;

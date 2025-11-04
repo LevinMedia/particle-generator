@@ -20,9 +20,19 @@ export function ParticleCanvas({ config }: { config: ParticleConfig }) {
     const updateCanvasSize = () => {
       const dpr = window.devicePixelRatio || 1
       const rect = canvas.getBoundingClientRect()
-      canvas.width = rect.width * dpr
-      canvas.height = rect.height * dpr
-      ctx.scale(dpr, dpr)
+      const displayWidth = Math.floor(rect.width)
+      const displayHeight = Math.floor(rect.height)
+      
+      // Only update if size actually changed to avoid unnecessary redraws
+      if (canvas.width !== displayWidth * dpr || canvas.height !== displayHeight * dpr) {
+        // Set internal canvas size (actual pixels)
+        canvas.width = displayWidth * dpr
+        canvas.height = displayHeight * dpr
+        
+        // Reset transform and scale context to match device pixel ratio
+        ctx.setTransform(1, 0, 0, 1, 0, 0)
+        ctx.scale(dpr, dpr)
+      }
     }
     updateCanvasSize()
 
