@@ -149,6 +149,16 @@
 }
 
 @layer components {
+  .mobile-drawer-height {
+    height: 50vh;
+  }
+  
+  @supports (height: 50dvh) {
+    .mobile-drawer-height {
+      height: 50dvh;
+    }
+  }
+  
   .slider {
     @apply accent-accent transition-all duration-200;
     pointer-events: auto;
