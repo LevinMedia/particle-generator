@@ -58,14 +58,13 @@ export function MobilePresetNavigator({ config, onConfigChange }: MobilePresetNa
     <div className="flex items-center gap-2 px-4 py-3 rounded-lg bg-accent/80 hover:bg-accent/90 active:bg-accent border border-accent/50 shadow-lg" style={{ minHeight: "44px" }}>
       <button
         onClick={goToPrevious}
-        className="p-2 hover:bg-accent/30 active:bg-accent/40 text-accent-foreground transition-all duration-200 rounded button-interactive focus-ring flex-shrink-0"
+        className="p-1.5 hover:bg-accent/30 active:bg-accent/40 text-accent-foreground transition-all duration-200 rounded button-interactive focus-ring flex-shrink-0 flex items-center justify-center"
         aria-label="Previous preset"
         style={{
-          minHeight: "44px",
-          minWidth: "44px",
+          minWidth: "32px",
         }}
       >
-        <ChevronLeft className="w-5 h-5" />
+        <ChevronLeft className="w-4 h-4" />
       </button>
       
       <div className="flex-1 text-center px-2">
@@ -76,14 +75,13 @@ export function MobilePresetNavigator({ config, onConfigChange }: MobilePresetNa
 
       <button
         onClick={goToNext}
-        className="p-2 hover:bg-accent/30 active:bg-accent/40 text-accent-foreground transition-all duration-200 rounded button-interactive focus-ring flex-shrink-0"
+        className="p-1.5 hover:bg-accent/30 active:bg-accent/40 text-accent-foreground transition-all duration-200 rounded button-interactive focus-ring flex-shrink-0 flex items-center justify-center"
         aria-label="Next preset"
         style={{
-          minHeight: "44px",
-          minWidth: "44px",
+          minWidth: "32px",
         }}
       >
-        <ChevronRight className="w-5 h-5" />
+        <ChevronRight className="w-4 h-4" />
       </button>
     </div>
   )
