@@ -66,8 +66,6 @@ export function ParticleCanvas({ config }: { config: ParticleConfig }) {
       style={{
         background: config.backgroundColor,
         pointerEvents: "none",
-        transform: "scale(1.5)",
-        transformOrigin: "center center",
       }}
     />
   )

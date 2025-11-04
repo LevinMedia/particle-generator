@@ -31,7 +31,7 @@ export default function Home() {
   return (
     <main className="w-full h-screen flex flex-col lg:flex-row bg-background text-foreground overflow-hidden">
       {/* Full-screen particle background */}
-      <div className="flex-1 relative w-full h-full">
+      <div className="flex-1 relative w-full h-full overflow-hidden">
         <ParticleCanvas config={config} />
 
         {/* Mobile control toggle */}
