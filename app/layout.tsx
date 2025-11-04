@@ -19,6 +19,7 @@ export const metadata: Metadata = {
     viewportFit: "cover",
     shrinkToFit: false,
   },
+  metadataBase: new URL("https://v0-particle-simulator-ui.vercel.app"),
   openGraph: {
     title: "WebGL Background Generator",
     description:
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://v0-particle-simulator-ui.vercel.app/og-image.png",
         width: 1200,
         height: 630,
         alt: "WebGL Background Generator - Interactive 3D particle wave generator",
@@ -40,9 +41,8 @@ export const metadata: Metadata = {
     title: "WebGL Background Generator",
     description:
       "Interactive 3D particle wave generator with real-time rendering and camera controls.",
-    images: ["/og-image.png"],
+    images: ["https://v0-particle-simulator-ui.vercel.app/og-image.png"],
   },
-  metadataBase: new URL("https://v0-particle-simulator-ui.vercel.app"),
 }
 
 export default function RootLayout({
