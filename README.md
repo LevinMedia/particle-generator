@@ -1,74 +1,112 @@
-# WebGL Particle Simulator
+# WebGL Background Generator
 
-An interactive particle background configurator with real-time WebGL rendering. Create custom particle effects and export them for use in your projects.
+An interactive 3D particle wave generator with real-time rendering and camera controls. Create stunning animated backgrounds with flowing wave patterns and export them for use in your projects.
 
 ## Features
 
-- **Real-time particle physics** - Gravity, friction, and velocity simulation
-- **Visual customization** - Hue, saturation, lightness, and trail effects
-- **Preset configurations** - 6 built-in styles (Drift, Burst, Rain, Cosmic, Ember, Void)
-- **Mobile-first design** - Fully responsive with collapsible controls
-- **Export functionality** - Copy configuration and component code
-- **Modern UI** - Dark utilitarian aesthetic with mono fonts
+- **True 3D Wave Simulation** - Particles move through 3D space with realistic wave propagation
+- **Advanced Camera Controls** - Roll, pitch, and altitude adjustments for any viewing angle
+- **Gradient Color Mapping** - Dynamic colors based on wave height (peak to trough)
+- **6 Beautiful Presets** - Instantly load curated configurations
+- **Real-time Preview** - See changes instantly as you adjust controls
+- **Mobile-First Design** - Fully responsive with collapsible control panels
+- **Export Functionality** - Copy complete configuration and component code
+- **Optimized Performance** - Pre-computed color lookup tables for smooth rendering at high densities
+
+## Presets
+
+### Default
+Dense particle grid with high amplitude waves, slow movement, and elevated camera view. Perfect for subtle, meditative backgrounds.
+
+### Party Wave
+Dramatic camera angles with gradient colors flowing through complex wave patterns. High-energy visual with cyan-to-magenta gradient.
+
+### Ocean Depths
+Deep underwater aesthetic with cyan-to-blue gradients, extreme camera roll, and slow, complex waves. Immersive 3D perspective.
+
+### Neon Tsunami
+Bold hot pink/purple color scheme with large particles and high aerial view. Vibrant and eye-catching with dual wave layers.
+
+### Ripple
+Nearly top-down view with white-to-gray gradient creating concentric ripple effects. Multiple overlapping wave layers for zen-like patterns.
+
+### Aurora
+Green-to-purple gradient with high-frequency waves mimicking northern lights. Dense particles with slow, flowing motion.
 
 ## Configuration Parameters
 
-### Emission
-- **Particle Count** (10-500) - Total particles in simulation
-- **Emission Rate** (0.1-1) - Particles spawned per frame
-- **Particle Size** (0.5-8) - Base particle radius
-- **Particle Life** (20-300) - Frames until particle dies
+### Particles
+- **Particle Size** (1-10) - Visual size of each particle
+- **Particle Color Mode** - Solid or Gradient Map
+- **Particle Color** - Base color (solid mode)
+- **Peak Color** - Color at wave peaks (gradient mode)
+- **Trough Color** - Color at wave troughs (gradient mode)
+- **Background Color** - Solid background color
+- **Background Gradient** - Gradient endpoint color
 
-### Physics
-- **Speed** (0.1-5) - Initial velocity magnitude
-- **Gravity** (0-0.5) - Downward acceleration
-- **Friction** (0.9-0.99) - Velocity damping
-- **Explosive Force** (0.5-15) - Upward velocity multiplier
-- **Spread** (0.5-10) - Emission angle variance
+### Wave Properties
+- **Wave Direction** (0-360°) - Direction of wave propagation through 3D space
+- **Grid Density** (3-500) - Number of particles in the grid
+- **Wave Amplitude** (0-1+) - Height of the waves in 3D space
+- **Wave Frequency** (0.01-0.5) - Number of wave peaks across the grid
+- **Wave Speed** (0.1-5) - Animation speed
+- **Wave Count** (1-5) - Number of overlapping wave layers
 
-### Visuals
-- **Hue** (0-360) - Color tone
-- **Saturation** (0-100) - Color intensity
-- **Lightness** (20-80) - Color brightness
-- **Trail Length** (0-40) - Motion trail frames
+### Camera Controls
+- **Camera Roll** (-180° to 180°) - Rotation around the viewing axis
+- **Camera Pitch** (-90° to 90°) - Tilt angle (overhead to side view)
+- **Camera Altitude** (-1000 to 1000) - Vertical camera position for framing
 
 ## Usage
 
-### Option 1: Use the Simulator
-1. Open the app and configure particles in real-time
-2. Click "Export Config" to copy the configuration
-3. Paste into your project
+### Quick Start
+1. Load a preset to start with a curated configuration
+2. Adjust individual controls to fine-tune the effect
+3. Export the configuration when satisfied
 
-### Option 2: Copy Component
-1. Configure your effect
-2. Click "Show Code" under the Export section
-3. Copy the component code directly
+### Custom Configuration
+1. Open the control panel sections (Particles, Wave)
+2. Adjust sliders and color pickers in real-time
+3. Use camera controls to find the perfect viewing angle
+4. Copy the exported code to your project
 
-### Option 3: Use Presets
-1. Click any preset button (Drift, Burst, Rain, etc.)
-2. Fine-tune as needed
-3. Export when satisfied
+### Integration Guide
 
-## Integration Guide
+1. Copy the configuration from the Export section
+2. Use the provided component code in your Next.js project
+3. Customize colors and parameters as needed
 
-1. Copy `particle-engine.ts` and `particle-types.ts` to your `lib/` folder
-2. Copy `particle-canvas.tsx` to your `components/` folder
-3. Create a new component or page:
+Example integration:
 
 \`\`\`tsx
 import { ParticleCanvas } from '@/components/particle-canvas';
 
-export default function Background() {
+export default function Page() {
   const config = {
-    count: 150,
-    speed: 1,
-    // ... rest of config
+    size: 1,
+    gridDensity: 233,
+    waveAmplitude: 0.95,
+    waveFrequency: 0.01,
+    waveSpeed: 0.1,
+    waveCount: 1,
+    waveDirection: 229,
+    cameraRoll: 0,
+    cameraPitch: -6,
+    cameraAltitude: 240,
+    colorMode: "solid",
+    particleColor: "#ff00ff",
+    peakColor: "#00ffff",
+    troughColor: "#ff00ff",
+    backgroundColor: "#0a0a0a",
+    backgroundGradient: "#1a1a2e",
   };
 
   return (
     <div className="relative w-full h-screen">
       <ParticleCanvas config={config} />
-      {/* Your content here */}
+      <div className="relative z-10">
+        {/* Your content here */}
+      </div>
     </div>
   );
 }
@@ -76,22 +114,41 @@ export default function Background() {
 
 ## Performance Tips
 
-- Lower particle count for older devices (target 60fps)
-- Reduce trail length for better performance
-- Use the Drift preset for minimal impact
-- Test on mobile before deploying
+- **Grid Density**: Start with 100-150 for good performance, up to 500 for powerful devices
+- **Gradient Mode**: Uses optimized lookup tables, performs well even with high particle counts
+- **Wave Count**: Multiple wave layers (3-5) add complexity; use fewer for better performance
+- **Camera Altitude**: Higher altitude values may improve performance slightly
 
-## Customization
+## Technical Details
 
-The engine supports any HSL color and physical properties. Experiment with:
-- Negative gravity for floating effects
-- High friction values for slow, controlled motion
-- Low spread values for directional effects
-- Trail effects for motion blur
+### 3D Wave System
+- Waves propagate through a 2D plane in 3D space
+- Wave direction controls the flow pattern across the grid
+- Z-axis displacement creates the wave height
+- Perspective projection converts 3D coordinates to 2D canvas
+
+### Color Mapping
+- Gradient colors interpolate based on Z-displacement (wave height)
+- Pre-computed 256-color lookup table for optimal performance
+- Real-time color changes without performance impact
+
+### Camera System
+- Roll: Rotates view around Z-axis (screen)
+- Pitch: Rotates around X-axis (tilt up/down)
+- Altitude: Vertical viewport offset for framing
+- All transformations applied before 2D projection
 
 ## Browser Support
 
 - Chrome/Edge 90+
 - Firefox 88+
 - Safari 14+
-- Mobile browsers with Canvas 2D support
+- All modern mobile browsers with Canvas 2D support
+
+## Tech Stack
+
+- Next.js 15
+- TypeScript
+- Tailwind CSS
+- Canvas 2D API
+- Radix UI (sliders)
