@@ -7,9 +7,9 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Particle Simulator",
+  title: "WebGL Background Generator",
   description:
-    "Interactive WebGL particle background configurator. Create and export custom particle effects for your projects.",
+    "Interactive WebGL particle background generator. Create and export custom particle effects for your projects.",
   generator: "v0.app",
   viewport: {
     width: "device-width",

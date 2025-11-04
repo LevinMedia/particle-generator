@@ -15,7 +15,7 @@ interface ControlPanelProps {
 }
 
 export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlPanelProps) {
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(["particles", "wave", "export"]))
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set())
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const scrollPositionRef = useRef(0)
 
@@ -54,15 +54,15 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
       name: "Default",
       config: {
         size: 1,
-        gridDensity: 100,
-        waveAmplitude: 0.3,
-        waveFrequency: 0.05,
-        waveSpeed: 1,
+        gridDensity: 233,
+        waveAmplitude: 0.95,
+        waveFrequency: 0.01,
+        waveSpeed: 0.1,
         waveCount: 1,
-        waveDirection: 180,
+        waveDirection: 229,
         cameraRoll: 0,
-        cameraPitch: 0,
-        cameraAltitude: 0,
+        cameraPitch: -6,
+        cameraAltitude: 240,
         colorMode: "solid",
         particleColor: "#ff00ff",
         peakColor: "#00ffff",
@@ -97,14 +97,14 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
       config: {
         size: 1.5,
         gridDensity: 200,
-        waveAmplitude: 0.5,
-        waveFrequency: 0.08,
-        waveSpeed: 0.5,
-        waveCount: 2,
-        waveDirection: 90,
-        cameraRoll: 0,
-        cameraPitch: -45,
-        cameraAltitude: 200,
+        waveAmplitude: 0.95,
+        waveFrequency: 0.39,
+        waveSpeed: 0.1,
+        waveCount: 3,
+        waveDirection: 155,
+        cameraRoll: -151,
+        cameraPitch: -61,
+        cameraAltitude: -430,
         colorMode: "gradient",
         particleColor: "#0099ff",
         peakColor: "#00ffff",
@@ -114,24 +114,24 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
       },
     },
     {
-      name: "Neon Grid",
+      name: "Neon Tsunami",
       config: {
-        size: 2,
-        gridDensity: 80,
+        size: 10,
+        gridDensity: 193,
         waveAmplitude: 0.8,
         waveFrequency: 0.15,
-        waveSpeed: 1.5,
-        waveCount: 1,
-        waveDirection: 45,
-        cameraRoll: 0,
+        waveSpeed: 0.1,
+        waveCount: 2,
+        waveDirection: 210,
+        cameraRoll: 8,
         cameraPitch: -60,
-        cameraAltitude: 300,
+        cameraAltitude: 1000,
         colorMode: "gradient",
         particleColor: "#ff00ff",
-        peakColor: "#ff006e",
-        troughColor: "#00ffff",
-        backgroundColor: "#000000",
-        backgroundGradient: "#1a0033",
+        peakColor: "#00e1ff",
+        troughColor: "#c800ff",
+        backgroundColor: "#f70295",
+        backgroundGradient: "#6f0778",
       },
     },
     {
@@ -139,14 +139,14 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
       config: {
         size: 1,
         gridDensity: 150,
-        waveAmplitude: 0.2,
-        waveFrequency: 0.03,
-        waveSpeed: 2,
+        waveAmplitude: 0.5,
+        waveFrequency: 0.01,
+        waveSpeed: 0.3,
         waveCount: 5,
-        waveDirection: 0,
-        cameraRoll: 0,
-        cameraPitch: -80,
-        cameraAltitude: 500,
+        waveDirection: 138,
+        cameraRoll: -9,
+        cameraPitch: -83,
+        cameraAltitude: 1000,
         colorMode: "gradient",
         particleColor: "#ffffff",
         peakColor: "#ffffff",
@@ -158,16 +158,16 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
     {
       name: "Aurora",
       config: {
-        size: 1.5,
-        gridDensity: 120,
-        waveAmplitude: 0.7,
-        waveFrequency: 0.1,
-        waveSpeed: 0.3,
-        waveCount: 4,
-        waveDirection: 135,
-        cameraRoll: 15,
-        cameraPitch: -30,
-        cameraAltitude: -100,
+        size: 1,
+        gridDensity: 200,
+        waveAmplitude: 1,
+        waveFrequency: 0.5,
+        waveSpeed: 0.1,
+        waveCount: 5,
+        waveDirection: 330,
+        cameraRoll: 8,
+        cameraPitch: -7,
+        cameraAltitude: 880,
         colorMode: "gradient",
         particleColor: "#00ff00",
         peakColor: "#00ff88",
@@ -432,7 +432,6 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
   }) => {
     const [localValue, setLocalValue] = useState(value)
     const [isSelecting, setIsSelecting] = useState(false)
-    const colorInputRef = useRef<HTMLInputElement>(null)
     const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
     // Sync local value with prop when not selecting
@@ -442,22 +441,20 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
       }
     }, [value, isSelecting])
 
-    const handleColorClick = () => {
-      colorInputRef.current?.click()
-    }
-
-    const handleColorChange = (newColor: string) => {
+    const handleColorInput = (newColor: string) => {
       setLocalValue(newColor)
+      setIsSelecting(true)
       
       // Clear any pending update
       if (updateTimeoutRef.current) {
         clearTimeout(updateTimeoutRef.current)
       }
       
-      // Set a new timeout to update after user stops dragging
+      // Set a new timeout to update after user stops interacting
       updateTimeoutRef.current = setTimeout(() => {
         onChange(newColor)
-      }, 300)
+        setIsSelecting(false)
+      }, 500)
     }
 
     const displayValue = isSelecting ? localValue : value
@@ -469,29 +466,16 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
           {tooltip && <Tooltip text={tooltip} />}
         </div>
         <div className="flex gap-2 items-center">
-          <button
-            type="button"
-            onClick={handleColorClick}
-            className="w-12 h-8 rounded border border-border cursor-pointer hover:border-accent transition-colors"
-            style={{ backgroundColor: displayValue }}
-          />
           <input
-            ref={colorInputRef}
             type="color"
             value={displayValue}
-            onClick={(e) => {
-              e.stopPropagation()
-              setIsSelecting(true)
-            }}
             onInput={(e) => {
-              setIsSelecting(true)
-              handleColorChange((e.target as HTMLInputElement).value)
+              handleColorInput((e.target as HTMLInputElement).value)
             }}
             onChange={(e) => {
-              setIsSelecting(true)
-              handleColorChange(e.target.value)
+              handleColorInput(e.target.value)
             }}
-            className="hidden"
+            className="w-12 h-8 rounded border border-border cursor-pointer"
           />
           <input
             type="text"
@@ -515,7 +499,7 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
       <div className="p-4 border-b border-border sticky top-0 bg-background/95 backdrop-blur-sm flex items-center justify-between z-10">
         <div className="min-w-0">
           <h1 className="font-mono text-lg text-foreground truncate">particle.config</h1>
-          <p className="text-xs text-muted-foreground mt-1">WebGL Background Simulator</p>
+          <p className="text-xs text-muted-foreground mt-1">WebGL Background Generator</p>
         </div>
         {onMobileClose && (
           <button
@@ -533,16 +517,23 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
         <div className="p-4 border-b border-border">
           <h2 className="text-xs font-mono uppercase text-muted-foreground mb-3">00. PRESETS</h2>
           <div className="grid grid-cols-2 gap-2">
-            {presets.map((preset) => (
-              <button
-                key={preset.name}
-                onClick={() => loadPreset(preset.config)}
-                className="px-3 py-2 text-xs font-mono bg-muted/20 hover:bg-muted/40 active:bg-muted/60 border border-border rounded transition-all duration-150 text-left text-foreground button-interactive focus-ring"
-                style={{ minHeight: "40px" }}
-              >
-                {preset.name}
-              </button>
-            ))}
+            {presets.map((preset) => {
+              const isActive = JSON.stringify(config) === JSON.stringify(preset.config)
+              return (
+                <button
+                  key={preset.name}
+                  onClick={() => loadPreset(preset.config)}
+                  className={`px-3 py-2 text-xs font-mono rounded transition-all duration-150 text-left button-interactive focus-ring ${
+                    isActive
+                      ? "bg-accent text-accent-foreground border-2 border-accent font-bold"
+                      : "bg-muted/20 hover:bg-muted/40 active:bg-muted/60 border border-border text-foreground"
+                  }`}
+                  style={{ minHeight: "40px" }}
+                >
+                  {preset.name}
+                </button>
+              )
+            })}
           </div>
         </div>
 
