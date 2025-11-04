@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
-import { ChevronDown, X, HelpCircle } from "lucide-react"
+import { ChevronDown, X, HelpCircle, Link2, Check } from "lucide-react"
 import * as SliderPrimitive from "@radix-ui/react-slider"
 import type { ParticleConfig } from "@/lib/particle-types"
 import { ExportSection } from "./export-section"
@@ -16,8 +16,10 @@ interface ControlPanelProps {
 
 export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlPanelProps) {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set())
+  const [copiedLink, setCopiedLink] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const scrollPositionRef = useRef(0)
+  const isInitialMount = useRef(true)
 
   // Preserve scroll position across re-renders
   useEffect(() => {
@@ -45,13 +47,10 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
     onConfigChange({ ...config, ...updates })
   }
 
-  const loadPreset = (preset: ParticleConfig) => {
-    onConfigChange(preset)
-  }
-
-  const presets: Array<{ name: string; config: ParticleConfig }> = [
+  const presets: Array<{ name: string; id: string; config: ParticleConfig }> = [
     {
       name: "Default",
+      id: "default",
       config: {
         size: 1,
         gridDensity: 233,
@@ -73,6 +72,7 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
     },
     {
       name: "Party Wave",
+      id: "party-wave",
       config: {
         size: 1,
         gridDensity: 143,
@@ -94,6 +94,7 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
     },
     {
       name: "Ocean Depths",
+      id: "ocean-depths",
       config: {
         size: 1.5,
         gridDensity: 200,
@@ -115,6 +116,7 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
     },
     {
       name: "Neon Tsunami",
+      id: "neon-tsunami",
       config: {
         size: 10,
         gridDensity: 193,
@@ -136,6 +138,7 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
     },
     {
       name: "Ripple",
+      id: "ripple",
       config: {
         size: 1,
         gridDensity: 150,
@@ -157,6 +160,7 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
     },
     {
       name: "Aurora",
+      id: "aurora",
       config: {
         size: 1,
         gridDensity: 200,
@@ -177,6 +181,47 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
       },
     },
   ]
+
+  // Load preset by ID
+  const loadPreset = (presetId: string) => {
+    const preset = presets.find((p) => p.id === presetId)
+    if (preset) {
+      onConfigChange(preset.config)
+      // Update URL hash
+      if (typeof window !== "undefined") {
+        window.history.replaceState(null, "", `#${presetId}`)
+      }
+    }
+  }
+
+  // Load preset from URL hash on mount
+  useEffect(() => {
+    if (isInitialMount.current && typeof window !== "undefined") {
+      isInitialMount.current = false
+      const hash = window.location.hash.slice(1) // Remove the '#'
+      if (hash) {
+        const preset = presets.find((p) => p.id === hash)
+        if (preset) {
+          onConfigChange(preset.config)
+        }
+      }
+    }
+  }, [])
+
+  // Copy current URL to clipboard
+  const copyLink = () => {
+    if (typeof window !== "undefined") {
+      const currentPreset = presets.find((p) => JSON.stringify(p.config) === JSON.stringify(config))
+      const url = currentPreset
+        ? `${window.location.origin}${window.location.pathname}#${currentPreset.id}`
+        : window.location.href.split("#")[0]
+      
+      navigator.clipboard.writeText(url).then(() => {
+        setCopiedLink(true)
+        setTimeout(() => setCopiedLink(false), 2000)
+      })
+    }
+  }
 
   const Tooltip = ({ text }: { text: string }) => (
     <div className="group relative inline-flex">
@@ -515,14 +560,35 @@ export function ControlPanel({ config, onConfigChange, onMobileClose }: ControlP
 
       <div ref={scrollContainerRef} onScroll={handleScroll} className="flex-1 overflow-y-auto scrollable">
         <div className="p-4 border-b border-border">
-          <h2 className="text-xs font-mono uppercase text-muted-foreground mb-3">00. PRESETS</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xs font-mono uppercase text-muted-foreground">00. PRESETS</h2>
+            <div className="flex gap-2">
+              <button
+                onClick={copyLink}
+                className="px-2 py-1 text-xs font-mono rounded transition-all duration-150 bg-muted/20 hover:bg-muted/40 active:bg-muted/60 border border-border text-foreground button-interactive focus-ring flex items-center gap-1.5"
+                title="Copy link to current preset"
+              >
+                {copiedLink ? (
+                  <>
+                    <Check className="w-3.5 h-3.5" />
+                    <span>Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Link2 className="w-3.5 h-3.5" />
+                    <span>Copy Link</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
           <div className="grid grid-cols-2 gap-2">
             {presets.map((preset) => {
               const isActive = JSON.stringify(config) === JSON.stringify(preset.config)
               return (
                 <button
                   key={preset.name}
-                  onClick={() => loadPreset(preset.config)}
+                  onClick={() => loadPreset(preset.id)}
                   className={`px-3 py-2 text-xs font-mono rounded transition-all duration-150 text-left button-interactive focus-ring ${
                     isActive
                       ? "bg-accent text-accent-foreground border-2 border-accent font-bold"
