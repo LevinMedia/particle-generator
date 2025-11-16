@@ -4,6 +4,10 @@
 
 An interactive 3D particle wave generator with real-time rendering and camera controls. Create stunning animated backgrounds with flowing wave patterns and export them for use in your projects.
 
+Want to use it in your own project? Easy! Ask your AI assistant of choice to clone this repo into your project, and [add it to the background of any component / page you want](https://portfolio.levinmedia.com)!
+
+**** 
+
 ## Features
 
 - **True 3D Wave Simulation** - Particles move through 3D space with realistic wave propagation
