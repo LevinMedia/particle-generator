@@ -1,10 +1,39 @@
 # WebGL Background Generator
 
-**[🌐 Live Demo](https://v0-particle-simulator-ui.vercel.app)** 
+**[🌐 Live Demo](https://particle-generator.vercel.app)** 
 
 An interactive 3D particle wave generator with real-time rendering and camera controls. Create stunning animated backgrounds with flowing wave patterns and export them for use in your projects.
 
-Want to use it in your own project? Easy! Ask your AI assistant of choice to clone this repo into your project, and [add it to the background of any component / page you want](https://portfolio.levinmedia.com)!
+**Want to use it in your own project? Easy!** 
+- Ask your AI assistant of choice to clone this repo into your project, and add it to background of any page or component you'd like.
+- Vist the live demo linked above and create something you like. Copy the output in **Export > Configuration object** and feed that to your agent. They'll figure out what to do.
+
+**Here's a prompt to get you started**
+
+```
+git clone https://github.com/LevinMedia/particle-generator.git into my project 
+I want to use it in the background of [insert page / component name] Lets start with the party wave preset:
+// particle.config.ts - Current configuration
+export const particleConfig = {
+  size: 1,
+  gridDensity: 143,
+  waveAmplitude: 1,
+  waveFrequency: 0.5,
+  waveSpeed: 0.1,
+  waveCount: 3,
+  waveDirection: 220,
+  cameraRoll: -8,
+  cameraPitch: -72,
+  cameraAltitude: 1000,
+  colorMode: "gradient",
+  particleColor: "#ff00ff",
+  peakColor: "#00ffff",
+  troughColor: "#ff00ff",
+  backgroundColor: "#0a0a0a",
+  backgroundGradient: "#1a1a2e",
+} as const;
+```
+It's totally extensible from there. In [my own implementation](https://portfolio.levinmedia.com)! I hooked up the colors to my sites theme system so it updates based on selected theme colors, and works in both light & dark mode. 
 
 **** 
 
@@ -75,48 +104,6 @@ Green-to-purple gradient with high-frequency waves mimicking northern lights. De
 2. Adjust sliders and color pickers in real-time
 3. Use camera controls to find the perfect viewing angle
 4. Copy the exported code to your project
-
-### Integration Guide
-
-1. Copy the configuration from the Export section
-2. Use the provided component code in your Next.js project
-3. Customize colors and parameters as needed
-
-Example integration:
-
-\`\`\`tsx
-import { ParticleCanvas } from '@/components/particle-canvas';
-
-export default function Page() {
-  const config = {
-    size: 1,
-    gridDensity: 233,
-    waveAmplitude: 0.95,
-    waveFrequency: 0.01,
-    waveSpeed: 0.1,
-    waveCount: 1,
-    waveDirection: 229,
-    cameraRoll: 0,
-    cameraPitch: -6,
-    cameraAltitude: 240,
-    colorMode: "solid",
-    particleColor: "#ff00ff",
-    peakColor: "#00ffff",
-    troughColor: "#ff00ff",
-    backgroundColor: "#0a0a0a",
-    backgroundGradient: "#1a1a2e",
-  };
-
-  return (
-    <div className="relative w-full h-screen">
-      <ParticleCanvas config={config} />
-      <div className="relative z-10">
-        {/* Your content here */}
-      </div>
-    </div>
-  );
-}
-\`\`\`
 
 ## Performance Tips
 
