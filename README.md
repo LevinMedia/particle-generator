@@ -33,7 +33,7 @@ export const particleConfig = {
   backgroundGradient: "#1a1a2e",
 } as const;
 ```
-It's totally extensible from there. In [my own implementation](https://portfolio.levinmedia.com)! I hooked up the colors to my sites theme system so it updates based on selected theme colors, and works in both light & dark mode. 
+It's totally extensible from there. In [my own implementation](https://portfolio.levinmedia.com) I hooked up the colors to my sites theme system so it updates based on selected theme colors, and works in both light & dark mode. 
 
 **** 
 
